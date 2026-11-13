@@ -1,1 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Akshat Cricket Game</title>
+<style>
+body{margin:0;background:#007bff;font-family:Arial;text-align:center;color:white}
+.top{padding:20px}
+.score{background:white;color:#002b5c;padding:15px;border-radius:20px;margin:10px;font-size:22px;font-weight:bold}
+.ground{background:#2ecc71;height:300px;border-radius:20px;margin:15px;position:relative;overflow:hidden;border:5px solid white}
+#ball{width:40px;height:40px;background:red;border-radius:50%;position:absolute;top:20px;left:50%;font-size:25px;line-height:40px;transition:all 0.1s}
+#bat{font-size:70px;position:absolute;bottom:20px;left:50%;transform:translateX(-50%)}
+#msg{font-size:28px;font-weight:bold;margin:10px;min-height:40px}
+button{background:#ffcc00;color:black;border:none;padding:18px 40px;font-size:24px;font-weight:bold;border-radius:50px;cursor:pointer;box-shadow:0 5px 0 #cc9900}
+button:active{transform:scale(0.95)}
+</style>
+</head>
+<body>
+<div class="top">
+<h1>🏏 AKSHAT CRICKET</h1>
+<p>Tap HIT at Right Time for SIX!</p>
+</div>
 
+<div class="score">SCORE: <span id="score">0</span> | WICKET: <span id="wicket">0</span> | BALL: <span id="ballCount">0</span></div>
+
+<div class="ground">
+<div id="ball">🏏</div>
+<div id="bat">🏏</div>
+<div style="position:absolute;bottom:0;width:100%;background:rgba(0,0,0,0.2);padding:5px;">PITCH</div>
+</div>
+
+<div id="msg">Press BOWL to Start!</div>
+<br>
+<button onclick="bowl()">🎳 BOWL</button>
+<button onclick="hit()" style="background:#00ff88;box-shadow:0 5px 0 #00aa55;">🏏 HIT!</button>
+<br><br>
+<button onclick="location.reload()" style="background:white;font-size:16px;padding:10px 20px;">🔄 NEW GAME</button>
+<p>© Akshat Tech Inc 💙</p>
+
+<script>
+let score=0, wicket=0, ballCount=0, ballPos=20, ballMoving=false, ballInterval;
+
+function bowl(){
+if(ballMoving) return;
+if(wicket>=3){document.getElementById('msg').innerText="GAME OVER! Score: "+score; return;}
+ballCount++; document.getElementById('ballCount').innerText=ballCount;
+ballPos=20; ballMoving=true;
+document.getElementById('msg').innerText="Ball aa rahi hai... HIT dabao!";
+clearInterval(ballInterval);
+ballInterval=setInterval(()=>{
+ballPos+=8;
+document.getElementById('ball').style.top=ballPos+'px';
+if(ballPos>=230){
+clearInterval(ballInterval);
+ballMoving=false;
+wicket++; document.getElementById('wicket').innerText=wicket;
+document.getElementById('msg').innerText="❌ BOWLED! Wicket Gaya!";
+if(wicket>=3) document.getElementById('msg').innerText="🏆 GAME OVER! Final Score: "+score;
+}
+},50);
+}
+
+function hit(){
+if(!ballMoving) return;
+clearInterval(ballInterval);
+ballMoving=false;
+// Ball kitni paas hai, us hisaab se run
+if(ballPos>180 && ballPos<240){
+let r = Math.random();
+if(r>0.6){score+=6; document.getElementById('msg').innerText="🔥 SIXXXX! +6 Runs!";}
+else if(r>0.3){score+=4; document.getElementById('msg').innerText="💥 FOUR! +4 Runs!";}
+else{score+=2; document.getElementById('msg').innerText="👍 Good Shot! +2 Runs!";}
+}else{
+wicket++; document.getElementById('wicket').innerText=wicket;
+document.getElementById('msg').innerText="😭 OUT! Jaldi Hit Kar Diya!";
+if(wicket>=3) document.getElementById('msg').innerText="🏆 GAME OVER! Final Score: "+score;
+}
+document.getElementById('score').innerText=score;
+document.getElementById('ball').style.top='20px';
+}
+</script>
+</body>
+  </html>
